@@ -1,0 +1,17 @@
+# build.yaml - Hive代码生成配置
+# 运行命令：flutter packages pub run build_runner build --delete-conflicting-outputs
+
+targets:
+  $default:
+    builders:
+      hive_generator:
+        options:
+          # 生成适配器时的配置
+          output: source_output
+          
+# 注意：需要先运行以下命令生成.g.dart文件
+# flutter packages pub get
+# flutter packages pub run build_runner build --delete-conflicting-outputs
+#
+# 如果要持续监听文件变化并自动生成，使用：
+# flutter packages pub run build_runner watch --delete-conflicting-outputs

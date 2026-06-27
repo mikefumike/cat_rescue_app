@@ -1,0 +1,81 @@
+# Codemagic 云构建配置 — 光影爱宠
+# 使用方式：推送到 GitHub → Codemagic 关联仓库 → 自动构建
+
+workflows:
+  android-workflow:
+    name: 光影爱宠 Android
+    instance_type: mac_mini_m1
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: 拉取依赖
+        script: flutter pub get
+      - name: 构建 Release APK
+        script: flutter build apk --release --no-tree-shake-icons --target-platform android-arm64
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com  # ← 改成你的邮箱
+
+  ios-workflow:
+    name: 光影爱宠 iOS
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        # 代码签名配置 - 在 Codemagic UI 的 Environment variables 中设置
+        # CM_CERTIFICATE:     你的 Apple 发布证书 (P12, Base64 编码)
+        # CM_CERTIFICATE_PASS: 证书密码
+        # CM_PROVISIONING_PROFILE: 描述文件 (mobileprovision, Base64 编码)
+        # APP_STORE_CONNECT_ISSUER_ID: App Store Connect API 签发者 ID
+        # APP_STORE_CONNECT_KEY_ID:    App Store Connect API 密钥 ID
+        # APP_STORE_CONNECT_PRIVATE_KEY: App Store Connect API 私钥
+        BUNDLE_ID: "com.example.catRescueApp"
+        APP_STORE_NAME: "光影爱宠"
+    scripts:
+      - name: 设置代码签名
+        script: |
+          # 如果在 Codemagic UI 设置了证书变量，自动解锁钥匙串
+          if [ -n "$CM_CERTIFICATE" ]; then
+            echo "初始化 Apple 代码签名..."
+            keychainify
+          else
+            echo "⚠️ 未设置证书，将使用 --no-codesign 模式（仅用于测试）"
+          fi
+      - name: 拉取依赖
+        script: flutter pub get
+      - name: Pod install
+        script: |
+          cd ios
+          pod install --repo-update
+      - name: 构建 iOS Release
+        script: |
+          if [ -n "$CM_CERTIFICATE" ]; then
+            flutter build ios --release --export-method=ad-hoc
+          else
+            flutter build ios --release --no-codesign
+          fi
+      - name: 导出 IPA（有签名时）
+        script: |
+          if [ -n "$CM_CERTIFICATE" ]; then
+            mkdir -p build/ios/ipa
+            # 从 .app 生成 .ipa
+            mkdir -p Payload
+            cp -r build/ios/iphoneos/Runner.app Payload/
+            zip -r build/ios/ipa/Runner.ipa Payload/
+          fi
+    artifacts:
+      - build/ios/iphoneos/Runner.app
+      - build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com  # ← 改成你的邮箱

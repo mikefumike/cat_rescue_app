@@ -1,0 +1,78 @@
+﻿name: cat_rescue_app
+description: 光影爱宠 - 猫咪救助管理APP
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # 状态管理
+  provider: ^6.1.1
+  flutter_riverpod: ^2.4.8
+
+  # 路由导航
+  go_router: ^13.0.1
+
+  # 网络请求
+  http: ^1.1.0
+
+  # 本地存储
+  shared_preferences: ^2.2.2
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+
+  # 图片/视频
+  image_picker: ^1.0.4
+  video_player: ^2.8.1
+
+  # UI组件
+  fluttertoast: ^8.2.4
+
+  # 表单验证
+  form_field_validator: ^1.1.0
+
+  # 日期时间
+  table_calendar: ^3.0.9
+  intl: ^0.20.2
+
+  # 权限管理
+  permission_handler: ^11.1.0
+
+  # 应用信息
+  package_info_plus: ^8.3.0
+
+  # 加密（密码哈希）
+  crypto: ^3.0.3
+
+  # Excel 导出
+  excel: ^4.0.3
+  share_plus: ^7.2.1
+  path_provider: ^2.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.8
+  hive_generator: ^2.0.1
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+
+flutter:
+  uses-material-design: true
+
+  # 图片资源
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/

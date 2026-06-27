@@ -1,0 +1,43 @@
+﻿# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+lib/generated_plugin_registrant.g.dart
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/*.iml
+android/.cxx/
+android/local.properties
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/App.framework
+ios/build/
+ios/*.xcworkspace
+ios/Runner/GoogleService-Info.plist
+
+# Web
+web/flutter/
+web/.dart_tool/
+web/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+.DS_Store
+
+# Misc
+*.log
+*.hprof
+*.bak
+.env
