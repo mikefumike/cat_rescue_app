@@ -8,28 +8,7 @@
 # ============================================================
 
 workflows:
-  # ----------------------------------------------------------
-  # Android 工作流 (mac_mini_m1 机器构建)
-  # ----------------------------------------------------------
-  android-workflow:
-    name: Android 构建
-    instance_type: mac_mini_m1
-    max_build_duration: 30
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-    scripts:
-      - name: 拉取依赖
-        script: flutter pub get
-      - name: 构建 Release APK
-        script: flutter build apk --release --no-tree-shake-icons --target-platform android-arm64
-    artifacts:
-      - build/app/outputs/flutter-apk/*.apk
-    publishing:
-      email:
-        recipients:
-          - bathfire@example.com  # ← 修改为你的邮箱
+ 
 
   # ----------------------------------------------------------
   # iOS 工作流 (mac_mini_m1 机器构建)
@@ -70,4 +49,4 @@ workflows:
     publishing:
       email:
         recipients:
-          - bathfire@example.com  # ← 修改为你的邮箱
+          - 19029875@qq.com  # ← 修改为你的邮箱
