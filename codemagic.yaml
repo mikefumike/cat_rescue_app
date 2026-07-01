@@ -1,52 +1,50 @@
 # ============================================================
 # Codemagic 云构建配置 - 喵星守护站
 # 使用方式：
-#   1. 推送到 GitHub
-#   2. 打开 https://codemagic.io 登录
-#   3. Add App → 选择 GitHub → 授权 → 选择 cat_rescue_app
-#   4. 即可自动触发构建
+# 1. 推送到 GitHub
+# 2. 打开 https://codemagic.io 登录
+# 3. Add App → 选择 GitHub → 授权 → 选择 cat_rescue_app
+# 4. 即可自动触发构建
 # ============================================================
 
 workflows:
- 
-
-  # ----------------------------------------------------------
-  # iOS 工作流 (mac_mini_m1 机器构建)
-  # ----------------------------------------------------------
-  ios-workflow:
-    name: iOS 构建
-    instance_type: mac_mini_m1
-    max_build_duration: 60
-    environment:
-      flutter: stable
-      xcode: latest
-      cocoapods: default
-      vars:
-        BUNDLE_ID: "com.example.catRescueApp"
-        APP_NAME: "喵星守护站"
-    scripts:
-      - name: 拉取依赖
-        script: flutter pub get
-      - name: Pod install
-        script: |
-          cd ios && pod install --repo-update
-      - name: 构建 iOS (无签名模式)
-        script: |
-          # 无证书模式 - 生成 .app 用于测试
-          # 如需发布，请在 Codemagic UI 中配置 Apple 证书
-          flutter build ios --release --no-codesign
-      - name: 导出测试 IPA
-        script: |
-          mkdir -p build/ios/ipa
-          if [ -d "build/ios/iphoneos/Runner.app" ]; then
-            mkdir -p Payload
-            cp -r build/ios/iphoneos/Runner.app Payload/
-            cd Payload && zip -r ../ipa/Runner.ipa . && cd ..
-          fi
-    artifacts:
-      - build/ios/iphoneos/Runner.app
-      - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - 19029875@qq.com  # ← 修改为你的邮箱
+ # ----------------------------------------------------------
+ # iOS 工作流 (mac_mini_m1 机器构建)
+ # ----------------------------------------------------------
+ ios-workflow:
+ name: iOS 构建
+ instance_type: mac_mini_m1
+ max_build_duration: 60
+ environment:
+ flutter: stable
+ xcode: latest
+ cocoapods: default
+ vars:
+ BUNDLE_ID: "com.example.catRescueApp"
+ APP_NAME: "喵星守护站"
+ scripts:
+ - name: 拉取依赖
+ script: flutter pub get
+ - name: Pod install
+ script: cd ios && pod install --repo-update
+ - name: 禁用 Swift Package Manager
+ script: export ENABLE_SWIFT_PACKAGE_MANAGER_INTEGRATION=false
+ - name: 构建 iOS (无签名模式)
+ script: |
+ export ENABLE_SWIFT_PACKAGE_MANAGER_INTEGRATION=false
+ flutter build ios --release --no-codesign
+ - name: 导出测试 IPA
+ script: |
+ mkdir -p build/ios/ipa
+ if [ -d "build/ios/iphoneos/Runner.app" ]; then
+ mkdir -p Payload
+ cp -r build/ios/iphoneos/Runner.app Payload/
+ cd Payload && zip -r ../ipa/Runner.ipa . && cd ..
+ fi
+ artifacts:
+ - build/ios/iphoneos/Runner.app
+ - build/ios/ipa/*.ipa
+ publishing:
+ email:
+ recipients:
+ - 19029875@qq.com
