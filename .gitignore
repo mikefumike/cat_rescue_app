@@ -21,7 +21,6 @@ ios/.symlinks/
 ios/Flutter/Flutter.framework
 ios/Flutter/App.framework
 ios/build/
-ios/*.xcworkspace
 ios/Runner/GoogleService-Info.plist
 
 # Web
