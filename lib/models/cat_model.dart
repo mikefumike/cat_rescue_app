@@ -69,7 +69,6 @@ class CatModel {
     this.growthPhotos = const [],
   });
 
-  // 计算年龄
   String get age {
     if (birthDate == null) return '未知';
     final now = DateTime.now();
@@ -80,7 +79,6 @@ class CatModel {
     return '$years岁${months % 12 > 0 ? '${months % 12}个月' : ''}';
   }
 
-  // 拷贝方法
   CatModel copyWith({
     String? id,
     String? name,
@@ -116,4 +114,42 @@ class CatModel {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'birthDate': birthDate?.toIso8601String(),
+    'gender': gender,
+    'breed': breed,
+    'weight': weight,
+    'personalityTags': personalityTags,
+    'photos': photos,
+    'status': status,
+    'rescueDate': rescueDate.toIso8601String(),
+    'description': description,
+    'medicalRecords': medicalRecords.map((r) => r.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'growthPhotos': growthPhotos.map((p) => p.toJson()).toList(),
+  };
+
+  factory CatModel.fromJson(Map<String, dynamic> json) => CatModel(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    birthDate: json['birthDate'] != null ? DateTime.parse(json['birthDate'] as String) : null,
+    gender: json['gender'] as String,
+    breed: json['breed'] as String,
+    weight: (json['weight'] as num).toDouble(),
+    personalityTags: (json['personalityTags'] as List<dynamic>).cast<String>(),
+    photos: (json['photos'] as List<dynamic>).cast<String>(),
+    status: json['status'] as String,
+    rescueDate: DateTime.parse(json['rescueDate'] as String),
+    description: json['description'] as String?,
+    medicalRecords: (json['medicalRecords'] as List<dynamic>?)
+        ?.map((r) => MedicalRecordModel.fromJson(r as Map<String, dynamic>)).toList() ?? [],
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    updatedAt: DateTime.parse(json['updatedAt'] as String),
+    growthPhotos: (json['growthPhotos'] as List<dynamic>?)
+        ?.map((p) => GrowthPhotoModel.fromJson(p as Map<String, dynamic>)).toList() ?? [],
+  );
 }

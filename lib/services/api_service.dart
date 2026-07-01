@@ -1,4 +1,4 @@
-// lib/services/api_service.dart - API 服务类 (替换 DatabaseService)
+﻿// lib/services/api_service.dart - API 服务类 (替换 DatabaseService)
 // 用于连接云端后端，替代本地 Hive 数据库
 
 import 'dart:convert';
@@ -112,7 +112,7 @@ class ApiService {
   // ==================== 猫咪管理 ====================
 
   // 获取所有猫咪
-  Future<List<Cat>> getAllCats({String? status, String? search}) async {
+  Future<List<CatModel>> getAllCats({String? status, String? search}) async {
     String url = ApiConfig.CATS;
     if (status != null || search != null) {
       final query = <String, String>{};
@@ -129,13 +129,13 @@ class ApiService {
     final result = _handleResponse(response);
     if (result['success']) {
       final List<dynamic> data = result['data'];
-      return data.map((json) => Cat.fromJson(json)).toList();
+      return data.map((json) => CatModel.fromJson(json)).toList();
     }
     return [];
   }
 
   // 获取单个猫咪
-  Future<Cat?> getCatById(String catId) async {
+  Future<CatModel?> getCatById(String catId) async {
     final response = await http.get(
       Uri.parse('${ApiConfig.CAT_DETAIL}/$catId'),
       headers: _headers(),
@@ -143,13 +143,13 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return Cat.fromJson(result['data']);
+      return CatModel.fromJson(result['data']);
     }
     return null;
   }
 
   // 添加猫咪
-  Future<Cat> addCat(Cat cat) async {
+  Future<CatModel> addCat(CatModel cat) async {
     final response = await http.post(
       Uri.parse(ApiConfig.CATS),
       headers: _headers(),
@@ -158,13 +158,13 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return Cat.fromJson(result['data']);
+      return CatModel.fromJson(result['data']);
     }
     throw Exception('添加猫咪失败');
   }
 
   // 更新猫咪
-  Future<Cat> updateCat(String catId, Map<String, dynamic> updates) async {
+  Future<CatModel> updateCat(String catId, Map<String, dynamic> updates) async {
     final response = await http.put(
       Uri.parse('${ApiConfig.CAT_DETAIL}/$catId'),
       headers: _headers(),
@@ -173,7 +173,7 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return Cat.fromJson(result['data']);
+      return CatModel.fromJson(result['data']);
     }
     throw Exception('更新猫咪失败');
   }
@@ -191,7 +191,7 @@ class ApiService {
   // ==================== 医疗记录 ====================
 
   // 获取某猫咪的所有医疗记录
-  Future<List<MedicalRecord>> getMedicalRecordsByCat(String catId) async {
+  Future<List<MedicalRecordModel>> getMedicalRecordsByCat(String catId) async {
     final response = await http.get(
       Uri.parse('${ApiConfig.MEDICAL_BY_CAT}/$catId'),
       headers: _headers(),
@@ -200,13 +200,13 @@ class ApiService {
     final result = _handleResponse(response);
     if (result['success']) {
       final List<dynamic> data = result['data'];
-      return data.map((json) => MedicalRecord.fromJson(json)).toList();
+      return data.map((json) => MedicalRecordModel.fromJson(json)).toList();
     }
     return [];
   }
 
   // 添加医疗记录
-  Future<MedicalRecord> addMedicalRecord(MedicalRecord record) async {
+  Future<MedicalRecordModel> addMedicalRecord(MedicalRecordModel record) async {
     final response = await http.post(
       Uri.parse(ApiConfig.MEDICAL),
       headers: _headers(),
@@ -215,13 +215,13 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return MedicalRecord.fromJson(result['data']);
+      return MedicalRecordModel.fromJson(result['data']);
     }
     throw Exception('添加医疗记录失败');
   }
 
   // 更新医疗记录
-  Future<MedicalRecord> updateMedicalRecord(String recordId, Map<String, dynamic> updates) async {
+  Future<MedicalRecordModel> updateMedicalRecord(String recordId, Map<String, dynamic> updates) async {
     final response = await http.put(
       Uri.parse('${ApiConfig.MEDICAL}/$recordId'),
       headers: _headers(),
@@ -230,7 +230,7 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return MedicalRecord.fromJson(result['data']);
+      return MedicalRecordModel.fromJson(result['data']);
     }
     throw Exception('更新医疗记录失败');
   }
@@ -248,7 +248,7 @@ class ApiService {
   // ==================== 收养申请 ====================
 
   // 获取所有收养申请
-  Future<List<Adoption>> getAllAdoptions({String? status}) async {
+  Future<List<AdoptionModel>> getAllAdoptions({String? status}) async {
     String url = ApiConfig.ADOPTIONS;
     if (status != null) {
       url += '?status=$status';
@@ -262,13 +262,13 @@ class ApiService {
     final result = _handleResponse(response);
     if (result['success']) {
       final List<dynamic> data = result['data'];
-      return data.map((json) => Adoption.fromJson(json)).toList();
+      return data.map((json) => AdoptionModel.fromJson(json)).toList();
     }
     return [];
   }
 
   // 提交收养申请
-  Future<Adoption> addAdoption(Adoption adoption) async {
+  Future<AdoptionModel> addAdoption(AdoptionModel adoption) async {
     final response = await http.post(
       Uri.parse(ApiConfig.ADOPTIONS),
       headers: _headers(),
@@ -277,13 +277,13 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return Adoption.fromJson(result['data']);
+      return AdoptionModel.fromJson(result['data']);
     }
     throw Exception('提交收养申请失败');
   }
 
   // 更新收养申请状态
-  Future<Adoption> updateAdoptionStatus(String adoptionId, String status, {String? note, String? adoptionDate}) async {
+  Future<AdoptionModel> updateAdoptionStatus(String adoptionId, String status, {String? note, String? adoptionDate}) async {
     final body = <String, dynamic>{'status': status};
     if (note != null) body['note'] = note;
     if (adoptionDate != null) body['adoptionDate'] = adoptionDate;
@@ -296,7 +296,7 @@ class ApiService {
 
     final result = _handleResponse(response);
     if (result['success']) {
-      return Adoption.fromJson(result['data']);
+      return AdoptionModel.fromJson(result['data']);
     }
     throw Exception('更新收养申请状态失败');
   }

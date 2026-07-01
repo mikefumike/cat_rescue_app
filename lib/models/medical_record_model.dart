@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+﻿import 'package:hive/hive.dart';
 
 part 'medical_record_model.g.dart';
 
@@ -91,5 +91,31 @@ class MedicalRecordModel {
       photos: photos ?? this.photos,
       createdAt: createdAt ?? this.createdAt,
     );
-  }
+  }  Map<String, dynamic> toJson() => {
+    'id': id,
+    'catId': catId,
+    'type': type,
+    'title': title,
+    'recordDate': recordDate.toIso8601String(),
+    'nextDueDate': nextDueDate?.toIso8601String(),
+    'medication': medication,
+    'dosage': dosage,
+    'notes': notes,
+    'photos': photos,
+    'createdAt': createdAt.toIso8601String(),
+  };
+
+  factory MedicalRecordModel.fromJson(Map<String, dynamic> json) => MedicalRecordModel(
+    id: json['id'] as String,
+    catId: json['catId'] as String,
+    type: json['type'] as String,
+    title: json['title'] as String,
+    recordDate: DateTime.parse(json['recordDate'] as String),
+    nextDueDate: json['nextDueDate'] != null ? DateTime.parse(json['nextDueDate'] as String) : null,
+    medication: json['medication'] as String?,
+    dosage: json['dosage'] as String?,
+    notes: json['notes'] as String?,
+    photos: (json['photos'] as List<dynamic>?)?.cast<String>() ?? [],
+    createdAt: DateTime.parse(json['createdAt'] as String),
+  );
 }

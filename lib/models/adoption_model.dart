@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+﻿import 'package:hive/hive.dart';
 
 part 'adoption_model.g.dart';
 
@@ -114,4 +114,44 @@ class AdoptionModel {
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'catId': catId,
+    'applicantName': applicantName,
+    'contact': contact,
+    'livingCondition': livingCondition,
+    'hasPetExperience': hasPetExperience,
+    'experienceDescription': experienceDescription,
+    'hasSealedWindow': hasSealedWindow,
+    'acceptedVisit': acceptedVisit,
+    'applyDate': applyDate.toIso8601String(),
+    'status': status,
+    'reviewNotes': reviewNotes,
+    'adoptionDate': adoptionDate?.toIso8601String(),
+    'photos': photos,
+    'visitRecords': visitRecords,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
+
+  factory AdoptionModel.fromJson(Map<String, dynamic> json) => AdoptionModel(
+    id: json['id'] as String,
+    catId: json['catId'] as String,
+    applicantName: json['applicantName'] as String,
+    contact: json['contact'] as String,
+    livingCondition: json['livingCondition'] as String,
+    hasPetExperience: json['hasPetExperience'] as bool,
+    experienceDescription: json['experienceDescription'] as String?,
+    hasSealedWindow: json['hasSealedWindow'] as bool,
+    acceptedVisit: json['acceptedVisit'] as bool,
+    applyDate: DateTime.parse(json['applyDate'] as String),
+    status: json['status'] as String,
+    reviewNotes: json['reviewNotes'] as String?,
+    adoptionDate: json['adoptionDate'] != null ? DateTime.parse(json['adoptionDate'] as String) : null,
+    photos: (json['photos'] as List<dynamic>?)?.cast<String>() ?? [],
+    visitRecords: (json['visitRecords'] as List<dynamic>?)?.cast<String>() ?? [],
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    updatedAt: DateTime.parse(json['updatedAt'] as String),
+  );
 }

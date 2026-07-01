@@ -104,3 +104,72 @@ flutter build ios --release
 | `flutter_plugin_android_lifecycle` NDK 警告 | 不影响 iOS 构建，忽略 |
 | 缺少 `Podfile.lock` | 首次 `pod install` 会自动生成 |
 | 推送通知/位置权限 | 当前未配置，如需在 Xcode 中开启 Capabilities |
+
+---
+
+## 版本管理规范
+
+### 版本号规则
+
+| 字段 | 含义 | 示例 |
+|------|------|------|
+| **Major** | 主版本（重大功能/架构变更） | V1 → V2 |
+| **Minor** | 次版本（新增功能，向下兼容） | V1.0 → V1.1 |
+| **Patch** | 修订版（Bug修复/优化） | V1.0.0 → V1.0.1 |
+| **+build** | Android build number | `+1`, `+2` |
+
+### 发版流程
+
+**每次发布前执行：**
+
+1. **更新 `pubspec.yaml` 中的版本号**
+   ```yaml
+   version: 1.1.0+2
+   #        ↑ ↑  ↑
+   #      Minor Patch buildCode（每编译一次+1）
+   ```
+
+2. **更新 `VERSION_HISTORY.md`**
+   - 在 `## ✅ 已发布版本` 顶部插入新版本条目
+   - 记录新增/修复/优化内容
+
+3. **构建 APK**
+   ```powershell
+   flutter build apk --debug
+   ```
+
+4. **归档到 `versions/Vx.y.z/`**
+   ```powershell
+   New-Item -ItemType Directory -Path "versions/V1.1.0" -Force
+   Copy-Item "build/app/outputs/flutter-apk/app-debug.apk" `
+          "versions/V1.1.0/cat_rescue_app-V1.1.0-debug.apk"
+   ```
+
+5. **提交 Git**
+   ```bash
+   git add VERSION_HISTORY.md pubspec.yaml versions/
+   git commit -m "Release V1.1.0"
+   git tag "v1.1.0"
+   git push && git push --tags
+   ```
+
+### 目录结构
+
+```
+cat_rescue_app/
+├── versions/              ← 所有历史版本 APK
+│   ├── V1.0.0/
+│   │   └── cat_rescue_app-V1.0.0-debug.apk
+│   └── V1.1.0/
+│       └── cat_rescue_app-V1.1.0-debug.apk
+├── build/                 ← 仅保留最新构建产物
+│   └── app/outputs/flutter-apk/app-debug.apk   ← 每次构建自动覆盖
+└── VERSION_HISTORY.md     ← 版本变更记录
+```
+
+### ❌ 不要做的事
+
+- **不要删除** `versions/` 中的任何历史版本 APK
+- **不要**把 `build/` 中的 APK 当作长期存档（会被下次构建覆盖）
+- **不要**跳过更新 `VERSION_HISTORY.md` 就发布
+- build number 只增不减（Android 系统用它判断版本高低）

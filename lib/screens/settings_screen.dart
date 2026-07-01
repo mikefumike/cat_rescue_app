@@ -85,8 +85,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSectionHeader('数据管理'),
             _buildDataManagement(),
             const Divider(),
+            _buildSectionHeader('微信维护'),
+            _buildWechatSection(),
+            const Divider(),
             _buildSectionHeader('提醒设置'),
             _buildReminderSettings(),
+            const Divider(),
+            _buildSectionHeader('联系我们'),
+            _buildContactUs(),
             const Divider(),
             _buildSectionHeader('关于应用'),
             _buildAppInfo(),
@@ -106,6 +112,89 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: const Color(0xFFFF8C42),
               fontWeight: FontWeight.bold,
             ),
+      ),
+    );
+  }
+
+  Widget _buildWechatSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withValues(alpha: 0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF07C160).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.qr_code, color: Color(0xFF07C160), size: 26),
+              ),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '微信客服 / 运维群',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    SizedBox(height: 2),
+                    Text(
+                      '扫码联系工作人员或加入运维群',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // 二维码图片
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+              'assets/images/wechat_qr.png',
+              width: 220,
+              height: 220,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: 220,
+                height: 220,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.qr_code_2, size: 64, color: Colors.grey.shade400),
+                    const SizedBox(height: 8),
+                    Text('二维码加载失败', style: TextStyle(color: Colors.grey.shade500)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '长按识别 · 保存到相册',
+            style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+          ),
+        ],
       ),
     );
   }
@@ -340,6 +429,103 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onChanged: (v) => showInfo('功能开发中...'),
         ),
       ],
+    );
+  }
+
+  Widget _buildContactUs() {
+    return Column(
+      children: [
+        ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF07C160).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.qr_code, color: Color(0xFF07C160), size: 28),
+          ),
+          title: const Text('微信维护群'),
+          subtitle: const Text('扫码联系管理员，加入维护群'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: _showWechatQrDialog,
+        ),
+        ListTile(
+          leading: const Icon(Icons.support_agent, color: Color(0xFFFF8C42)),
+          title: const Text('客服邮箱'),
+          subtitle: const Text('guangying_aichong@outlook.com'),
+          trailing: const Icon(Icons.copy, size: 18, color: Colors.grey),
+          onTap: () {
+            // TODO: 复制邮箱
+            showInfo('邮箱已复制');
+          },
+        ),
+      ],
+    );
+  }
+
+  void _showWechatQrDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF07C160).withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.wechat, color: Color(0xFF07C160), size: 32),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                '微信维护群',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 4),
+              const Text(
+                '扫码加入，与管理员沟通',
+                style: TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  'assets/wechat_maintenance_qr.png',
+                  width: 260,
+                  height: 260,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: 260,
+                    height: 260,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.qr_code_2, size: 64, color: Colors.grey.shade400),
+                        const SizedBox(height: 8),
+                        Text('二维码加载失败', style: TextStyle(color: Colors.grey.shade600)),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('关闭'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

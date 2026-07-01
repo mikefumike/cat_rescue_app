@@ -1,4 +1,4 @@
-import 'package:hive/hive.dart';
+﻿import 'package:hive/hive.dart';
 
 part 'growth_photo_model.g.dart';
 
@@ -65,5 +65,23 @@ class GrowthPhotoModel {
       createdAt: createdAt ?? this.createdAt,
       isVideo: isVideo ?? this.isVideo,
     );
-  }
+  }  Map<String, dynamic> toJson() => {
+    'id': id,
+    'photoFileName': photoFileName,
+    'dateTaken': dateTaken.toIso8601String(),
+    'note': note,
+    'weight': weight,
+    'createdAt': createdAt.toIso8601String(),
+    'isVideo': isVideo,
+  };
+
+  factory GrowthPhotoModel.fromJson(Map<String, dynamic> json) => GrowthPhotoModel(
+    id: json['id'] as String,
+    photoFileName: json['photoFileName'] as String,
+    dateTaken: DateTime.parse(json['dateTaken'] as String),
+    note: json['note'] as String?,
+    weight: (json['weight'] as num?)?.toDouble(),
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    isVideo: json['isVideo'] as bool? ?? false,
+  );
 }
