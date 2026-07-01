@@ -23,6 +23,11 @@ workflows:
  BUNDLE_ID: "com.example.catRescueApp"
  APP_NAME: "喵星守护站"
  scripts:
+ - name: 生成 iOS 目录（如果不存在）
+ script: |
+ if [ ! -d "ios" ]; then
+ flutter create --platforms=ios .
+ fi
  - name: 拉取依赖
  script: flutter pub get
  - name: Pod install
